@@ -1,6 +1,4 @@
-// Minimal JS: drag & drop, upload to Google, gallery -> searchbyimage, lazy load
-
-const dropZone = document.getElementById('dropZone');
+ const dropZone = document.getElementById('dropZone');
 const input = document.getElementById('imageInput');
 
 // drag visuals
@@ -26,21 +24,18 @@ input.addEventListener('change', e => {
   uploadToGoogle(f);
 });
 
-// engine buttons (Google/Bing/Yandex) — when image is from gallery we open chosen engine
+// engine buttons (Google/Bing/Yandex)
 document.querySelectorAll('.engine').forEach(btn => {
   btn.addEventListener('click', () => {
-    // when user hasn't selected a gallery image, simply prompt to pick image
     const sel = document.createElement('input');
     sel.type = 'file';
     sel.accept = 'image/*';
     sel.onchange = (ev) => {
       const file = ev.target.files && ev.target.files[0];
       if (!file) return;
-      // Google requires POST upload; for Google we open upload; for Bing/Yandex we suggest upload elsewhere
       const engine = btn.dataset.engine;
       if (engine === 'google') uploadToGoogle(file);
       else {
-        // instruct user: upload to image host then use URL — simple fallback: open Google upload
         alert('For Bing/Yandex: please upload an image (we will open Google upload as easiest option).');
         uploadToGoogle(file);
       }
@@ -49,7 +44,7 @@ document.querySelectorAll('.engine').forEach(btn => {
   });
 });
 
-// upload helper for Google (POST form)
+// upload helper for Google
 function uploadToGoogle(file) {
   const form = document.createElement('form');
   form.action = 'https://www.google.com/searchbyimage/upload';
@@ -67,7 +62,7 @@ function uploadToGoogle(file) {
   document.body.removeChild(form);
 }
 
-// gallery clicks -> open Google searchbyimage by URL (use data-src if present)
+// gallery clicks -> Google search by image URL
 document.querySelectorAll('.g-grid img').forEach(img => {
   img.addEventListener('click', () => {
     const hi = img.getAttribute('data-src') || img.src;
@@ -76,7 +71,7 @@ document.querySelectorAll('.g-grid img').forEach(img => {
   });
 });
 
-// lazy-load high-res on viewport
+// lazy-load high-res images
 const lazyImgs = Array.from(document.querySelectorAll('.g-grid img'));
 if ('IntersectionObserver' in window) {
   const io = new IntersectionObserver((entries, obs) => {
@@ -93,7 +88,7 @@ if ('IntersectionObserver' in window) {
   lazyImgs.forEach(i => { const h = i.getAttribute('data-src'); if (h) i.src = h; });
 }
 
-// ad placeholder click visual feedback
+// ad placeholder click feedback
 document.querySelectorAll('.ad-banner').forEach(ad => {
   ad.addEventListener('click', () => {
     ad.style.boxShadow = '0 30px 80px rgba(255,180,80,0.12)';
